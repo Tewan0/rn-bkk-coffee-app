@@ -1,24 +1,62 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import {
+  Kanit_400Regular,
+  Kanit_700Bold,
+  useFonts,
+} from "@expo-google-fonts/kanit";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const [fontsLoaded] = useFonts({
+    Kanit_400Regular,
+    Kanit_700Bold,
+  });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="home"
+        options={{
+          title: "Top 10 Bangkok Coffee",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "Kanit_400Regular",
+            color: "#fff",
+          },
+          headerStyle: {
+            backgroundColor: "#4A3B32",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="detail"
+        options={{
+          title: "รายละเอียดร้าน",
+          headerBackButtonDisplayMode: "minimal",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "Kanit_400Regular",
+            color: "#fff",
+          },
+          headerStyle: {
+            backgroundColor: "#4A3B32",
+          },
+        }}
+      />
+    </Stack>
   );
 }
